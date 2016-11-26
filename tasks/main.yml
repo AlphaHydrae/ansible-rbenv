@@ -1,0 +1,31 @@
+---
+- name: Install rbenv
+  homebrew: name={{ item }} state=present
+  become: true
+  become_user: "{{ rbenv_homebrew_user }}"
+  items:
+    - openssl
+    - libyaml
+    - libffi
+    - rbenv
+  when: ansible_pkg_mgr == 'homebrew'
+- name: Install the default ruby version
+  command: "{{ rbenv_bin }} install {{ rbenv_ruby_version }} creates={{ rbenv_versions }}/{{ rbenv_ruby_version }}"
+  environment:
+    PATH: "{{ rbenv_root }}:{{ ansible_env.PATH  }}"
+  become: true
+  become_user: "{{ rbenv_homebrew_user }}"
+  when: rbenv_ruby_version is defined
+- name: Set the default ruby version
+  command: "{{ rbenv_bin }} global {{ rbenv_ruby_version }}"
+  environment:
+    PATH: "{{ rbenv_root }}:{{ ansible_env.PATH  }}"
+  become: true
+  become_user: "{{ rbenv_homebrew_user }}"
+  register: result
+  changed_when: result.rc != 0
+  when: rbenv_ruby_version is defined
+
+# Other package managers
+- fail: msg="{{ ansible_pkg_mgr }} is not a supported package manager (Homebrew is supported)"
+  when: ansible_pkg_mgr != 'homebrew'
