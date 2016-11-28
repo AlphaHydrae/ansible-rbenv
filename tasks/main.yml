@@ -8,6 +8,7 @@
     - libyaml
     - libffi
     - rbenv
+    - ruby-build
   when: ansible_pkg_mgr == 'homebrew'
 - name: Install the default ruby version
   command: "{{ rbenv_bin }} install {{ rbenv_ruby_version }} creates={{ rbenv_versions }}/{{ rbenv_ruby_version }}"
