@@ -16,7 +16,7 @@
 - name: Install the default ruby version
   command: "{{ rbenv_bin }} install {{ rbenv_ruby_version }} creates={{ rbenv_versions }}/{{ rbenv_ruby_version }}"
   environment:
-    PATH: "{{ rbenv_root }}:{{ ansible_env.PATH  }}"
+    PATH: "{{ rbenv_root }}:{{ ansible_env.PATH }}"
   become: true
   become_user: "{{ rbenv_homebrew_user }}"
   when: rbenv_ruby_version is defined
